@@ -5,7 +5,9 @@ I wrote this bot as a educational project over the summer to help me learn progr
 
 ### Requirements
 Python3 (it won't run in python2)
+
 A suitable dictionary of a bunch of lowercase words. (the larger the better)
+
 The wordlist that I use is included in the repository.
 
 ### Usage
