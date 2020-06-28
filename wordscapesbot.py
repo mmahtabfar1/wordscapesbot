@@ -1,59 +1,99 @@
 import itertools
 import math
+import ast
+from datetime import datetime
+
+
+def nSquaredArray(arr):
+    rowLength = math.ceil(math.sqrt(len(arr)))
+    justifiedArray = [arr[n:n + rowLength] for n in range(0, len(arr), rowLength)]
+
+    return justifiedArray
+
 
 while True:
     print()
-    unscramble = input(" Please enter the string you want to un-scramble: ")
-    inputLetters = list(unscramble)
+    unscramble = input(" Please enter the lowercase string you want to un-scramble: ")
+    inputLetters = [n.lower() for n in list(unscramble)]
     print("\n", "Given Letters: ", inputLetters, "\n")
 
-    possibleCombinations = []
+    possiblePermutations = []
 
-    for i in range(0, len(inputLetters) + 1):
-        for subset in itertools.permutations(inputLetters, i):
-            if subset not in possibleCombinations:
-                possibleCombinations.append(subset)
+    permutationStartTime = datetime.now()
 
-    for i in range(len(possibleCombinations)):
-        possibleCombinations[i] = "".join(possibleCombinations[i])
+    for i in range(2, len(inputLetters) + 1):
+        total = 0
+        for subset in set(list(itertools.permutations(inputLetters, i))):
+            # We're appending the list of i-length tuples from permutations.
+            possiblePermutations.append(''.join(subset))
+            total += 1
+        print(f' {i}-letter permutations: {total}')
 
-    # this was done to get rid of the empty string combination from being presented as
-    # a possible combinations of the letters.
-    possibleCombinations.pop(0)
+    # this was done to get rid of the empty string permutation from being presented as
+    # a possible permutation of the letters.
+    possiblePermutations.pop(0)
 
-    res = input(" Would you like to see the full list of possible combinations(Y/N)? ")
-    if res.lower() == 'y':
-        print(possibleCombinations)
+    permutationEndTime = datetime.now()
+
+    print()
+    # print(f' Permutation Start Time: {permutationStartTime},')
+    # print(f' Permutation End Time: {permutationEndTime},')
+    print(f' Permutation Process Runtime: {permutationEndTime - permutationStartTime}\n')
+
+    if len(possiblePermutations) > 10000:
+        res = input(f" WARNING: number of permutations exceeds 10000. "
+                    " Are you sure you want to see the full list of permutations(Y/N)?")
     else:
-        pass
+        res = input(" Would you like to see the full list of possible permutations(Y/N)? ")
+    if res.lower() == 'y':
+        gridPermutations = nSquaredArray(possiblePermutations)
+        longest = len(max(possiblePermutations, key=len))
+        print()
+        for line in gridPermutations:
+            print(f'\t', end=' ')
+            for word in line:
+                print(word + ' ' * ((longest - len(word)) + 1), end=' ')
+            print()
+        else:
+            pass
 
     with open("wordlist.txt", "r") as wordlist:
-        s = "start"
 
+        f = ast.literal_eval(wordlist.read())
         answerArray = []
 
-        while s != "":
-            s = wordlist.readline().strip()
-            if s in possibleCombinations and len(s) > 2:
-                answerArray.append(s)
+        dictionaryCheckStartTime = datetime.now()
+
+        for permutation in possiblePermutations:
+            # print(permutation, f[list(permutation)[0]]) Who guards the guards?
+            if permutation in f[list(permutation)[0]]:
+                answerArray.append(permutation)
+
+        dictionaryCheckEndTime = datetime.now()
+
+        print()
+        # print(f' Dictionary Check Start Time: {dictionaryCheckStartTime},')
+        # print(f' Dictionary Check End Time: {dictionaryCheckEndTime},')
+        print(f' Dictionary Check Runtime: {dictionaryCheckEndTime - dictionaryCheckStartTime}')
 
     if len(answerArray) == 1:
         condition = "was"
     else:
         condition = "were"
-    print(f'\n Out of {str(len(possibleCombinations))} possible combinations, '
-          f'{str(len(answerArray) - 1)} {condition} found in the dictionary.\n')
+    print(f'\n Out of {len(possiblePermutations)} possible permutations, '
+          f'{len(answerArray)} {condition} found in the dictionary.\n')
 
-    # this sets and makes the grid
-    longestWordLength = len(max(answerArray, key=len))
-    length = math.ceil(math.sqrt(len(answerArray)))
-    justifiedArray = [answerArray[i:i+length] for i in range(0, len(answerArray), length)]
+    # Sorting the array by increasing length as primary key, alpha as secondary key
+    answerArray = sorted(answerArray)
+    answerArray.sort(key=len)
 
+    gridMatches = nSquaredArray(answerArray)
+    longest = len(max(answerArray, key=len))
     print(f' Words Found:\n')
-    for line in justifiedArray:
+    for line in gridMatches:
         print(f'\t', end=' ')
         for word in line:
-            print(word + ' '*((longestWordLength - len(word)) + 1), end=' ')
+            print(word + ' ' * ((longest - len(word)) + 1), end=' ')
         print()
 
     while True:
