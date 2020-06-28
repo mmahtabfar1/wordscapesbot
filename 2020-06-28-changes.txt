@@ -1,27 +1,27 @@
 Changes:
 
--imported ast for literal_eval() on new dictionary data format
--imported datetime for runtime calculations
--created gridder function for human-readable arrays
--standardized(.lower()) unscramble variable for usage
--wrapped permutation calculation in runtime stopwatch
--replaced 3rd layer nested loop with set(list()) call on 
+- imported ast for literal_eval() on new dictionary data format
+- imported datetime for runtime calculations
+- created gridder function for human-readable arrays
+- standardized(.lower()) unscramble variable for usage
+- wrapped permutation calculation in runtime stopwatch
+- replaced 3rd layer nested loop with set(list()) call on 
     itertools.permutations, which returns a special object. This 
     single change cut program runtime by 30s for words of 
     length: (n >= 8).
--added output size warning @ > 10000
--used gridder function to structure the permutation output data
--changed the wordbank to a dictionary organized by first letter
+- added output size warning @ > 10000
+- used gridder function to structure the permutation output data
+- changed the wordbank to a dictionary organized by first letter
     This changed the runtime for the dictionary check by approximately
     1.5s for words of length: (n >= 8).
--added new data structure comprehension
--wrapped dictionary check in runtime stopwatch
--changed check direction: algo originally checked for existence of 
+- added new data structure comprehension
+- wrapped dictionary check in runtime stopwatch
+- changed check direction: algo originally checked for existence of 
     dictionary values in permutation pool, creating a search for 
     independent values within a dependent resource, rather than vice 
     versa. 
--cleaned up the f-strings again, as I left str(len()) calls, 
+- cleaned up the f-strings again, as I left str(len()) calls, 
     unnecessarily typecasting to str()
--sorted the answerArray by increasing length as primary key, alpha 
+- sorted the answerArray by increasing length as primary key, alpha 
     as secondary key for output display.
 
